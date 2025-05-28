@@ -1,7 +1,7 @@
 body {
   margin: 0;
   font-family: 'Arial', sans-serif;
-  background: url('images/673266d51cf62e5ad0e169a0_pink%20glitter%20gif.gif') no-repeat center center fixed;
+  background: url('/mymelody.gif') no-repeat center center fixed;
   background-size: cover;
   display: flex;
   flex-direction: column;
