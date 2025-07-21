@@ -53,7 +53,6 @@ body {
   text-align: center;
 }
 
-/* Mobile improvements for music player */
 @media (max-width: 600px) {
   .player {
     padding: 20px;
