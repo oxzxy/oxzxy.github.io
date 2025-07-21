@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Music Player - My Melody</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+
+    body {
+      padding: 40px 20px;
+      box-sizing: border-box;
+    }
+
+    .player {
+      background-color: rgba(255, 138, 216, 0.85);
+      padding: 20px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      color: white;
+      text-shadow: 1px 1px 4px #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .song-title {
+      font-size: 1.4rem;
+      margin-bottom: 12px;
+    }
+
+    .controls, .extra-controls {
+      margin-top: 15px;
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      width: 100%;
+    }
+
+    button.control-btn {
+      background-color: white;
+      color: #ff5bc6; /* darker pink for icons */
+      border: none;
+      border-radius: 50%;
+      width: 42px;
+      height: 42px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    button.control-btn:hover {
+      background-color: #ff5bc6;
+      color: white;
+    }
+
+    ul#playlist {
+      margin-top: 25px;
+      list-style: none;
+      padding: 0;
+      width: 100%;
+      max-height: 300px;
+      overflow-y: auto;
+      border-radius: 6px;
+      background: rgba(0,0,0,0.4);
+      box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+    }
+
+    ul#playlist li {
+      padding: 10px 15px;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      color: white;
+      text-shadow: 1px 1px 3px #000;
+      font-weight: bold;
+      transition: background-color 0.2s;
+    }
+
+    ul#playlist li:hover,
+    ul#playlist li.active {
+      background-color: rgba(255, 138, 216, 0.8);
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: #ff5bc6;
+      cursor: pointer;
+    }
+
+    .progress-container {
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .time-display {
+      text-align: right;
+      font-size: 0.9rem;
+      margin-top: 5px;
+      font-style: italic;
+      color: #ffd9f2;
+      text-shadow: 1px 1px 3px #000;
+    }
+
+    .back-button {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #ff8ad8;
+      color: white;
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-weight: bold;
+      text-decoration: none;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      transition: background-color 0.3s ease;
+      z-index: 1000;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .back-button:hover {
+      background-color: #ff5bc6;
+    }
+
+    /* === MOBILE ADJUSTMENTS === */
+    @media (max-width: 600px) {
+      .player {
+        max-width: 95vw;
+        padding: 16px;
+      }
+
+      button.control-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 1.4rem;
+      }
+
+      ul#playlist {
+        max-height: 40vh;
+      }
+
+      ul#playlist li {
+        font-size: 1.1rem;
+        padding: 14px 18px;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <a href="index.html" class="back-button">back to homepage</a>
+
+  <div class="player">
+    <h1 class="header">my playlist -w-</h1>
+    <div class="song-title" id="currentSong">pick a song :p</div>
+
+    <div class="controls">
+      <button class="control-btn" id="prevBtn" title="Previous">⏮</button>
+      <button class="control-btn" id="playPauseBtn" title="Play/Pause">▶</button>
+      <button class="control-btn" id="nextBtn" title="Next">⏭</button>
+      <button class="control-btn" id="loopBtn" title="Loop">🔁</button>
+    </div>
+
+    <div class="progress-container">
+      <input type="range" id="progressBar" value="0" min="0" max="100" />
+      <div class="time-display" id="timeDisplay">00:00 / 00:00</div>
+    </div>
+
+    <div class="extra-controls">
+      <label for="volume" style="margin-right:8px;">🔊</label>
+      <input type="range" id="volume" min="0" max="1" step="0.01" value="1" />
+    </div>
+
+    <ul id="playlist">
+      <li data-src="criptape\16 MOB - smokedope2016.mp3">16 MOB - smokedope2016.mp3</li>
+      <li data-src="criptape\Dope Love - smokedope2016.mp3">Dope Love - smokedope2016.mp3</li>
+      <li data-src="criptape\DRAFT NIGHT - smokedope2016.mp3">DRAFT NIGHT - smokedope2016.mp3</li>
+      <li data-src="criptape\Eastbay - smokedope2016.mp3">Eastbay - smokedope2016.mp3</li>
+      <li data-src="criptape\Elite Socks - smokedope2016.mp3">Elite Socks - smokedope2016.mp3</li>
+      <li data-src="criptape\Glock - smokedope2016.mp3">Glock - smokedope2016.mp3</li>
+      <li data-src="criptape\Kyoto - Laker.mp3">Kyoto - Laker.mp3</li>
+      <li data-src="criptape\No Water - smokedope2016.mp3">No Water - smokedope2016.mp3</li>
+      <li data-src="criptape\On My Roof - smokedope2016.mp3">On My Roof - smokedope2016.mp3</li>
+      <li data-src="criptape\SLOW DOWN - smokedope2016.mp3">SLOW DOWN - smokedope2016.mp3</li>
+      <li data-src="criptape\SNAKE - smokedope2016, Laker.mp3">SNAKE - smokedope2016, Laker.mp3</li>
+      <li data-src="criptape\Taipei Waterbed - smokedope2016.mp3">Taipei Waterbed - smokedope2016.mp3</li>
+      <li data-src="criptape\TRIPLE - smokedope2016.mp3">TRIPLE - smokedope2016.mp3</li>
+    </ul>
+  </div>
+
+  <audio id="audioPlayer"></audio>
+
+  <script>
+    const audioPlayer = document.getElementById("audioPlayer");
+    const playPauseBtn = document.getElementById("playPauseBtn");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const loopBtn = document.getElementById("loopBtn");
+    const currentSongDisplay = document.getElementById("currentSong");
+    const playlist = document.getElementById("playlist");
+    const volumeSlider = document.getElementById("volume");
+    const progressBar = document.getElementById("progressBar");
+    const timeDisplay = document.getElementById("timeDisplay");
+
+    let isPlaying = false;
+    let currentIndex = -1;
+    let loopEnabled = false;
+    const songs = Array.from(playlist.querySelectorAll("li"));
+
+    function loadSong(index) {
+      songs.forEach(li => li.classList.remove('active'));
+      const item = songs[index];
+      if (!item) return;
+      item.classList.add('active');
+      const src = item.getAttribute("data-src");
+      audioPlayer.src = src;
+      currentSongDisplay.textContent = item.textContent;
+      currentIndex = index;
+    }
+
+    function playSong() {
+      audioPlayer.play();
+      isPlaying = true;
+      playPauseBtn.textContent = "⏸";
+    }
+
+    function pauseSong() {
+      audioPlayer.pause();
+      isPlaying = false;
+      playPauseBtn.textContent = "▶";
+    }
+
+    function togglePlayPause() {
+      if (audioPlayer.src) {
+        isPlaying ? pauseSong() : playSong();
+      }
+    }
+
+    function updateProgress() {
+      if (audioPlayer.duration) {
+        const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+        progressBar.value = progress;
+        updateTimeDisplay();
+      }
+    }
+
+    function updateTimeDisplay() {
+      const format = time => {
+        const m = Math.floor(time / 60).toString().padStart(2, '0');
+        const s = Math.floor(time % 60).toString().padStart(2, '0');
+        return `${m}:${s}`;
+      };
+      timeDisplay.textContent = `${format(audioPlayer.currentTime)} / ${format(audioPlayer.duration || 0)}`;
+    }
+
+    playPauseBtn.addEventListener("click", togglePlayPause);
+
+    songs.forEach((item, index) => {
+      item.addEventListener("click", () => {
+        loadSong(index);
+        playSong();
+      });
+    });
+
+    audioPlayer.addEventListener("timeupdate", updateProgress);
+
+    progressBar.addEventListener("input", () => {
+      if (audioPlayer.duration) {
+        audioPlayer.currentTime = (progressBar.value / 100) * audioPlayer.duration;
+      }
+    });
+
+    volumeSlider.addEventListener("input", () => {
+      audioPlayer.volume = volumeSlider.value;
+    });
+
+    nextBtn.addEventListener("click", () => {
+      if (currentIndex < songs.length - 1) {
+        loadSong(currentIndex + 1);
+        playSong();
+      }
+    });
+
+    prevBtn.addEventListener("click", () => {
+      if (currentIndex > 0) {
+        loadSong(currentIndex - 1);
+        playSong();
+      }
+    });
+
+    loopBtn.addEventListener("click", () => {
+      loopEnabled = !loopEnabled;
+      audioPlayer.loop = loopEnabled;
+      loopBtn.style.backgroundColor = loopEnabled ? "#ff5bc6" : "white";
+      loopBtn.style.color = loopEnabled ? "white" : "#ff5bc6";
+    });
+
+    audioPlayer.addEventListener("ended", () => {
+      if (!loopEnabled && currentIndex < songs.length - 1) {
+        loadSong(currentIndex + 1);
+        playSong();
+      } else if (!loopEnabled) {
+        pauseSong();
+      }
+    });
+  </script>
+
+</body>
+</html>
