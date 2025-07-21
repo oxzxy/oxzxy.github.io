@@ -117,17 +117,6 @@
     });
   }
 
-  // Autoplay first track after user interacts with the page
-  function enableAutoplayOnce() {
-    if (tracks.length > 0) {
-      loadTrack(tracks[0].getAttribute('data-src'), tracks[0]);
-    }
-    document.removeEventListener('click', enableAutoplayOnce);
-  }
-
-  document.addEventListener('click', enableAutoplayOnce);
-
-  // Play next track when current one ends
   audio.addEventListener('ended', () => {
     let currentIndex = Array.from(tracks).findIndex(track => track.classList.contains('active'));
     let nextIndex = currentIndex + 1;
@@ -143,7 +132,7 @@
     fetch(src)
       .then(response => {
         if (!response.ok) throw new Error(`Failed to fetch ${src}`);
-        return response.blob(); // force caching
+        return response.blob(); 
       })
       .then(() => console.log(`Preloaded: ${src}`))
       .catch(err => console.warn(`Error preloading ${src}:`, err));
