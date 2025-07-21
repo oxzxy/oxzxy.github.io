@@ -90,34 +90,53 @@
   </div>
 
   <script>
-    const audio = document.getElementById('audio');
-    const source = document.getElementById('audio-source');
-    const playlist = document.getElementById('playlist');
-    const tracks = playlist.getElementsByTagName('li');
+  const audio = document.getElementById('audio');
+  const source = document.getElementById('audio-source');
+  const playlist = document.getElementById('playlist');
+  const tracks = playlist.getElementsByTagName('li');
 
-    function loadTrack(src, element) {
-      for (let track of tracks) {
-        track.classList.remove('active');
-      }
-      element.classList.add('active');
-      source.src = src;
-      audio.load();
-
-      // Only play once the browser can play the audio
-      audio.oncanplay = () => {
-        audio.play().catch(err => {
-          console.warn('Autoplay blocked or interrupted:', err);
-        });
-      };
-    }
-
+  function loadTrack(src, element) {
     for (let track of tracks) {
-      track.addEventListener('click', function () {
-        const src = this.getAttribute('data-src');
-        loadTrack(src, this);
-      });
+      track.classList.remove('active');
     }
-  </script>
+    element.classList.add('active');
+    source.src = src;
+    audio.load();
+
+    audio.oncanplay = () => {
+      audio.play().catch(err => {
+        console.warn('Autoplay blocked or interrupted:', err);
+      });
+    };
+  }
+
+  for (let track of tracks) {
+    track.addEventListener('click', function () {
+      const src = this.getAttribute('data-src');
+      loadTrack(src, this);
+    });
+  }
+
+  // Autoplay first track after user interacts with the page
+  function enableAutoplayOnce() {
+    if (tracks.length > 0) {
+      loadTrack(tracks[0].getAttribute('data-src'), tracks[0]);
+    }
+    document.removeEventListener('click', enableAutoplayOnce);
+  }
+
+  document.addEventListener('click', enableAutoplayOnce);
+
+  // Play next track when current one ends
+  audio.addEventListener('ended', () => {
+    let currentIndex = Array.from(tracks).findIndex(track => track.classList.contains('active'));
+    let nextIndex = currentIndex + 1;
+    if (nextIndex < tracks.length) {
+      const nextTrack = tracks[nextIndex];
+      loadTrack(nextTrack.getAttribute('data-src'), nextTrack);
+    }
+  });
+</script>
 
 </body>
 </html>
