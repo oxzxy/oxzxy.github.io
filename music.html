@@ -2,108 +2,96 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>poppi's music player</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Poppi's Music Player</title>
   <link rel="stylesheet" href="styles.css" />
-  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="favicon.ico" />
   <style>
     .player-container {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 20px;
       max-width: 500px;
       width: 90%;
-      background-color: rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 20px;
-      margin-top: 30px;
-      backdrop-filter: blur(8px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+      margin: 20px auto;
+      backdrop-filter: blur(10px);
     }
-
     audio {
       width: 100%;
-      margin-top: 15px;
+      margin-top: 10px;
     }
-
     ul#playlist {
       list-style: none;
       padding: 0;
+      margin-top: 20px;
       max-height: 300px;
       overflow-y: auto;
-      margin: 20px 0 0 0;
     }
-
     ul#playlist li {
-      padding: 10px;
+      padding: 8px;
       cursor: pointer;
-      border-bottom: 1px solid rgba(255,255,255,0.2);
+      border-radius: 6px;
+      transition: background 0.2s;
     }
-
     ul#playlist li:hover,
     ul#playlist li.active {
-      background-color: rgba(255, 255, 255, 0.2);
+      background-color: #ff8ad8;
     }
-
     .back-button {
       position: absolute;
       top: 20px;
       right: 20px;
+      padding: 10px 16px;
       background-color: #ff8ad8;
       color: white;
-      text-decoration: none;
-      padding: 10px 16px;
       border-radius: 6px;
       font-weight: bold;
-      font-size: 0.9rem;
-      transition: background-color 0.3s ease;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      text-decoration: none;
     }
-
-    .back-button:hover {
-      background-color: #ff5bc6;
-    }
-
-    @media screen and (max-width: 600px) {
+    @media (max-width: 600px) {
       .player-container {
-        width: 95%;
         padding: 16px;
+        width: 95%;
       }
-
-      ul#playlist li {
-        font-size: 0.9rem;
+      .back-button {
+        font-size: 14px;
+        padding: 8px 12px;
       }
     }
   </style>
 </head>
 <body>
-  <a class="back-button" href="index.html">Back to homepage</a>
 
-  <div class="header">poppi's music player ♪</div>
+  <a class="back-button" href="index.html">Back to Homepage</a>
+
+  <div class="header">poppi's music player</div>
 
   <div class="player-container">
-    <audio id="audio" controls loop>
-      <source id="source" src="" type="audio/mp3" />
+    <audio id="audio" controls>
+      <source id="audio-source" src="" type="audio/mpeg">
       Your browser does not support the audio element.
     </audio>
 
     <ul id="playlist">
-      <li data-src="criptape/16-mob---smokedope2016.mp3">16 MOB - smokedope2016.mp3</li>
-      <li data-src="criptape/dope-love---smokedope2016.mp3">Dope Love - smokedope2016.mp3</li>
-      <li data-src="criptape/draft-night---smokedope2016.mp3">DRAFT NIGHT - smokedope2016.mp3</li>
-      <li data-src="criptape/eastbay---smokedope2016.mp3">Eastbay - smokedope2016.mp3</li>
-      <li data-src="criptape/elite-socks---smokedope2016.mp3">Elite Socks - smokedope2016.mp3</li>
-      <li data-src="criptape/glock---smokedope2016.mp3">Glock - smokedope2016.mp3</li>
-      <li data-src="criptape/kyoto---laker.mp3">Kyoto - Laker.mp3</li>
-      <li data-src="criptape/no-water---smokedope2016.mp3">No Water - smokedope2016.mp3</li>
-      <li data-src="criptape/on-my-roof---smokedope2016.mp3">On My Roof - smokedope2016.mp3</li>
-      <li data-src="criptape/slow-down---smokedope2016.mp3">SLOW DOWN - smokedope2016.mp3</li>
-      <li data-src="criptape/snake---smokedope2016,-laker.mp3">SNAKE - smokedope2016, Laker.mp3</li>
-      <li data-src="criptape/taipei-waterbed---smokedope2016.mp3">Taipei Waterbed - smokedope2016.mp3</li>
-      <li data-src="criptape/triple---smokedope2016.mp3">TRIPLE - smokedope2016.mp3</li>
+      <li data-src="criptape/16-mob---smokedope2016.mp3">16 MOB - smokedope2016</li>
+      <li data-src="criptape/dope-love---smokedope2016.mp3">Dope Love - smokedope2016</li>
+      <li data-src="criptape/draft-night---smokedope2016.mp3">DRAFT NIGHT - smokedope2016</li>
+      <li data-src="criptape/eastbay---smokedope2016.mp3">Eastbay - smokedope2016</li>
+      <li data-src="criptape/elite-socks---smokedope2016.mp3">Elite Socks - smokedope2016</li>
+      <li data-src="criptape/glock---smokedope2016.mp3">Glock - smokedope2016</li>
+      <li data-src="criptape/kyoto---laker.mp3">Kyoto - Laker</li>
+      <li data-src="criptape/no-water---smokedope2016.mp3">No Water - smokedope2016</li>
+      <li data-src="criptape/on-my-roof---smokedope2016.mp3">On My Roof - smokedope2016</li>
+      <li data-src="criptape/slow-down---smokedope2016.mp3">SLOW DOWN - smokedope2016</li>
+      <li data-src="criptape/snake---smokedope2016,-laker.mp3">SNAKE - smokedope2016, Laker</li>
+      <li data-src="criptape/taipei-waterbed---smokedope2016.mp3">Taipei Waterbed - smokedope2016</li>
+      <li data-src="criptape/triple---smokedope2016.mp3">TRIPLE - smokedope2016</li>
     </ul>
   </div>
 
   <script>
     const audio = document.getElementById('audio');
-    const source = document.getElementById('source');
+    const source = document.getElementById('audio-source');
     const playlist = document.getElementById('playlist');
     const tracks = playlist.getElementsByTagName('li');
 
@@ -114,19 +102,22 @@
       element.classList.add('active');
       source.src = src;
       audio.load();
-      audio.play();
+
+      // Only play once the browser can play the audio
+      audio.oncanplay = () => {
+        audio.play().catch(err => {
+          console.warn('Autoplay blocked or interrupted:', err);
+        });
+      };
     }
 
     for (let track of tracks) {
       track.addEventListener('click', function () {
-        loadTrack(this.getAttribute('data-src'), this);
+        const src = this.getAttribute('data-src');
+        loadTrack(src, this);
       });
     }
-
-    // Optional: autoplay first track
-    if (tracks.length > 0) {
-      loadTrack(tracks[0].getAttribute('data-src'), tracks[0]);
-    }
   </script>
+
 </body>
 </html>
