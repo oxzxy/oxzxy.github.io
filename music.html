@@ -136,6 +136,19 @@
       loadTrack(nextTrack.getAttribute('data-src'), nextTrack);
     }
   });
+
+    window.addEventListener('DOMContentLoaded', () => {
+  Array.from(tracks).forEach(track => {
+    const src = track.getAttribute('data-src');
+    fetch(src)
+      .then(response => {
+        if (!response.ok) throw new Error(`Failed to fetch ${src}`);
+        return response.blob(); // force caching
+      })
+      .then(() => console.log(`Preloaded: ${src}`))
+      .catch(err => console.warn(`Error preloading ${src}:`, err));
+  });
+});
 </script>
 
 </body>
