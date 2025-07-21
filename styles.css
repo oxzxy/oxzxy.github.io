@@ -1,7 +1,7 @@
 body {
   margin: 0;
   font-family: 'Arial', sans-serif;
-  background: url('/mymelody.gif') no-repeat center center fixed;
+  background: url('mymelody.gif') no-repeat center center fixed;
   background-size: cover;
   display: flex;
   flex-direction: column;
@@ -51,4 +51,48 @@ body {
   color: white;
   font-style: italic;
   text-align: center;
+}
+
+/* Mobile improvements for music player */
+@media (max-width: 600px) {
+  .player {
+    padding: 20px;
+    max-width: 90vw;
+    width: 90vw;
+  }
+
+  .song-title {
+    font-size: 1.3rem;
+  }
+
+  .control-btn {
+    width: 48px;
+    height: 48px;
+    font-size: 1.3rem;
+  }
+
+  .controls,
+  .extra-controls {
+    gap: 16px;
+  }
+
+  .back-button {
+    font-size: 1rem;
+    padding: 10px 14px;
+    top: 12px;
+    right: 12px;
+  }
+
+  .time-display {
+    font-size: 0.95rem;
+  }
+
+  input[type="range"] {
+    height: 28px;
+  }
+
+  #playlist li {
+    padding: 14px;
+    font-size: 1rem;
+  }
 }
