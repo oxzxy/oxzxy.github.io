@@ -46,9 +46,9 @@
           display: none !important;
       }
 
-      /* RESIZABLE FLOATING PLAYER STYLES */
+      /* RESIZABLE FLOATING PLAYER - FIXED VIEWPORT CAPTURE */
       #musicWindow {
-          position: absolute;
+          position: fixed; /* Locked permanently to screen layer, ignoring terminal scrolling */
           top: 120px;
           left: 150px;
           width: 380px;
@@ -116,7 +116,6 @@
           flex-shrink: 0;
       }
 
-      /* PLAYBACK MODE BUTTON PANEL */
       .player-controls {
           display: flex;
           justify-content: space-between;
@@ -216,7 +215,7 @@
       </div>
     </div>
 
-    <!-- Clean Resizable Cyber Player Frame Widget Component -->
+    <!-- Floating Frame Component Widget Layer -->
     <div id="musicWindow" class="hidden">
       <div id="windowHeader">
         <span>AUDIO_PLAYER.EXE</span>
@@ -230,7 +229,6 @@
           Your browser does not support the audio element.
         </audio>
         
-        <!-- Toggle Control Mode Buttons -->
         <div class="player-controls">
           <div id="btn-loop" class="control-btn" onclick="toggleMode('loop')">Loop 1</div>
           <div id="btn-repeat" class="control-btn" onclick="toggleMode('repeat')">Repeat All</div>
@@ -248,7 +246,7 @@
           <li data-src="criptape/no-water---smokedope2016.mp3">No Water - smokedope2016</li>
           <li data-src="criptape/on-my-roof---smokedope2016.mp3">On My Roof - smokedope2016</li>
           <li data-src="criptape/slow-down---smokedope2016.mp3">SLOW DOWN - smokedope2016</li>
-          <li data-src="/criptape/snake---smokedope2016.mp3">SNAKE - smokedope2016, Laker</li>
+          <li data-src="criptape/snake---smokedope2016.mp3">SNAKE - smokedope2016, Laker</li>
           <li data-src="criptape/taipei-waterbed---smokedope2016.mp3">Taipei Waterbed - smokedope2016</li>
           <li data-src="criptape/triple---smokedope2016.mp3">TRIPLE - smokedope2016</li>
         </ul>
@@ -264,7 +262,6 @@
 
       let currentDir = '~';
 
-      // Playback State Engine Config Variables
       let isLoopSingle = false;
       let isRepeatAll = false;
       let isShuffle = false;
@@ -325,7 +322,6 @@
           document.getElementById('audio').pause();
       }
 
-      // Mode Handler Toggles
       function toggleMode(mode) {
           if (mode === 'loop') {
               isLoopSingle = !isLoopSingle;
@@ -347,7 +343,7 @@
           }
       }
 
-      // Safe Window Drag Script Mechanics
+      // Drag and Drop Script Mechanics (Updated to coordinate with fixed layers)
       let isDragging = false;
       let offsetX, offsetY;
       const header = document.getElementById('windowHeader');
@@ -355,8 +351,8 @@
       header.addEventListener('mousedown', (e) => {
           if(e.target.closest('.window-buttons')) return;
           isDragging = true;
-          offsetX = e.clientX - musicWindow.offsetLeft;
-          offsetY = e.clientY - musicWindow.offsetTop;
+          offsetX = e.clientX - musicWindow.getBoundingClientRect().left;
+          offsetY = e.clientY - musicWindow.getBoundingClientRect().top;
       });
 
       document.addEventListener('mousemove', (e) => {
@@ -414,7 +410,6 @@
           }
       });
 
-      // Command Execution Processing Engine
       document.addEventListener('click', () => {
           if (!inputRow.classList.contains('hidden') && !isDragging) input.focus();
       });
@@ -437,7 +432,7 @@
               if (cmd === 'clear') { output.innerHTML = ''; return; }
               if (cmd === 'reinit') { initializeTerminal(); return; }
               if (cmd === 'music') {
-                  output.innerHTML += "Opening interactive modular audio workspace client...\n\n";
+                  output.innerHTML += "Opening integrated high-fidelity music widget...\n\n";
                   openMusicWindow();
                   window.scrollTo(0, document.body.scrollHeight);
                   return;
@@ -447,7 +442,7 @@
                                       '  ls [folder]     - list contents\n' +
                                       '  cd [folder]     - change directory\n' +
                                       '  open [filename] - run/open target file\n' +
-                                      '  music           - boot audio player widget\n' +
+                                      '  music           - open interactive audio player widget\n' +
                                       '  clear           - clear terminal\n' +
                                       '  reinit          - reinitialize terminal\n\n';
                   window.scrollTo(0, document.body.scrollHeight);
