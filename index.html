@@ -1,20 +1,497 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>poppi's homepage</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Terminal Portfolio</title>
+    <style>
+      body {
+          background-color: #0c0c0c;
+          color: #f772da;
+          font-family: 'Courier New', Courier, monospace;
+          padding: 20px;
+          margin: 0;
+          overflow: hidden; 
+      }
+      #terminal {
+          max-width: 800px;
+          margin: 0 auto;
+      }
+      #output {
+          white-space: pre-wrap;
+          line-height: 1.4;
+      }
+      .input-line {
+          display: flex;
+          margin-top: 10px;
+      }
+      .prompt {
+          color: #f772da;
+          margin-right: 10px;
+          white-space: nowrap;
+      }
+      #command-input {
+          background: transparent;
+          border: none;
+          color: #f772da;
+          font-family: inherit;
+          font-size: inherit;
+          outline: none;
+          flex: 1;
+      }
+      a { color: #f772da; text-decoration: underline; }
+      a:hover { color: #ffffff; }
+      
+      .hidden {
+          display: none !important;
+      }
 
-  <div class="header">poppi's homepage ^w^</div>
+      /* RESIZABLE FLOATING PLAYER STYLES */
+      #musicWindow {
+          position: absolute;
+          top: 120px;
+          left: 150px;
+          width: 380px;
+          min-width: 280px;
+          min-height: 220px;
+          background: rgba(18, 18, 20, 0.9);
+          border: 2px solid #f772da;
+          border-radius: 4px;
+          box-shadow: 0 0 15px rgba(247, 114, 218, 0.3), inset 0 0 10px rgba(0, 0, 0, 0.9);
+          backdrop-filter: blur(8px);
+          z-index: 9999;
+          display: flex;
+          flex-direction: column;
+          font-family: 'Courier New', Courier, monospace;
+          letter-spacing: 0.5px;
+          resize: both; 
+          overflow: hidden;
+      }
+      #windowHeader {
+          background: #f772da;
+          color: #0c0c0c;
+          padding: 6px 12px;
+          cursor: move;
+          font-weight: bold;
+          font-size: 13px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          user-select: none;
+          text-transform: uppercase;
+          flex-shrink: 0;
+      }
+      .window-buttons button {
+          background: #0c0c0c;
+          border: 1px solid #0c0c0c;
+          color: #f772da;
+          font-family: monospace;
+          cursor: pointer;
+          font-weight: bold;
+          font-size: 12px;
+          padding: 1px 6px;
+          margin-left: 4px;
+          border-radius: 2px;
+          transition: all 0.2s;
+      }
+      .window-buttons button:hover {
+          background: #ffffff;
+          color: #0c0c0c;
+          border-color: #ffffff;
+      }
+      .window-body {
+          padding: 15px;
+          background: linear-gradient(rgba(18, 18, 20, 0.4) 50%, rgba(0, 0, 0, 0.4) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 255, 0, 0.03));
+          background-size: 100% 3px, 3px 100%;
+          display: flex;
+          flex-direction: column;
+          flex-grow: 1;
+          overflow: hidden;
+      }
+      
+      audio {
+          width: 100%;
+          margin-top: 5px;
+          filter: hue-rotate(110deg) brightness(1.2);
+          flex-shrink: 0;
+      }
 
-  <div class="button-container">
-    <a href="games.html" class="button">games</a>
-    <a href="socials.html" class="button">my socials/contacts</a>
-    <a href="music.html" class="button">music</a>
-  </div>
+      /* PLAYBACK MODE BUTTON PANEL */
+      .player-controls {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 10px;
+          gap: 6px;
+          flex-shrink: 0;
+      }
+      .control-btn {
+          flex: 1;
+          background: rgba(0, 0, 0, 0.6);
+          border: 1px solid rgba(247, 114, 218, 0.4);
+          color: rgba(247, 114, 218, 0.6);
+          font-family: 'Courier New', Courier, monospace;
+          font-size: 11px;
+          font-weight: bold;
+          padding: 6px 0;
+          cursor: pointer;
+          border-radius: 2px;
+          transition: all 0.15s ease-in-out;
+          text-transform: uppercase;
+          text-align: center;
+      }
+      .control-btn:hover {
+          border-color: #f772da;
+          color: #ffffff;
+          background: rgba(247, 114, 218, 0.1);
+      }
+      .control-btn.active {
+          background: #f772da;
+          color: #0c0c0c;
+          border-color: #f772da;
+          box-shadow: 0 0 8px rgba(247, 114, 218, 0.4);
+      }
+      
+      ul#playlist {
+          list-style: none;
+          padding: 0;
+          margin: 15px 0 0 0;
+          flex-grow: 1;
+          overflow-y: auto;
+          border: 1px solid rgba(247, 114, 218, 0.3);
+          background: rgba(0, 0, 0, 0.4);
+      }
+      ul#playlist li {
+          padding: 8px 12px;
+          cursor: pointer;
+          font-size: 13px;
+          border-bottom: 1px solid rgba(247, 114, 218, 0.15);
+          color: rgba(247, 114, 218, 0.7);
+          transition: all 0.15s ease-in-out;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+      }
+      ul#playlist li:last-child {
+          border-bottom: none;
+      }
+      ul#playlist li:hover {
+          background-color: rgba(247, 114, 218, 0.15);
+          color: #ffffff;
+          padding-left: 16px;
+      }
+      ul#playlist li.active {
+          background-color: #f772da;
+          color: #0c0c0c;
+          font-weight: bold;
+          padding-left: 16px;
+      }
+      ul#playlist li.active::before {
+          content: "» ";
+      }
 
-</body>
+      ul#playlist::-webkit-scrollbar {
+          width: 6px;
+      }
+      ul#playlist::-webkit-scrollbar-track {
+          background: rgba(0, 0, 0, 0.8);
+      }
+      ul#playlist::-webkit-scrollbar-thumb {
+          background: #f772da;
+          border-radius: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="terminal">
+      <div id="output"></div>
+      <div class="input-line" id="input-row">
+        <span class="prompt" id="prompt-text">user@poppis-portfolio:~$</span>
+        <input
+          type="text"
+          id="command-input"
+          autofocus
+          autocomplete="off"
+          spellcheck="false"
+        />
+      </div>
+    </div>
+
+    <!-- Clean Resizable Cyber Player Frame Widget Component -->
+    <div id="musicWindow" class="hidden">
+      <div id="windowHeader">
+        <span>AUDIO_PLAYER.EXE</span>
+        <div class="window-buttons">
+          <button onclick="closeMusicWindow()">X</button>
+        </div>
+      </div>
+      <div class="window-body">
+        <audio id="audio" controls>
+          <source id="audio-source" src="" type="audio/mpeg">
+          Your browser does not support the audio element.
+        </audio>
+        
+        <!-- Toggle Control Mode Buttons -->
+        <div class="player-controls">
+          <div id="btn-loop" class="control-btn" onclick="toggleMode('loop')">Loop 1</div>
+          <div id="btn-repeat" class="control-btn" onclick="toggleMode('repeat')">Repeat All</div>
+          <div id="btn-shuffle" class="control-btn" onclick="toggleMode('shuffle')">Shuffle</div>
+        </div>
+
+        <ul id="playlist">
+          <li data-src="criptape/16-mob---smokedope2016.mp3">16 MOB - smokedope2016</li>
+          <li data-src="criptape/dope-love---smokedope2016.mp3">Dope Love - smokedope2016</li>
+          <li data-src="criptape/draft-night---smokedope2016.mp3">DRAFT NIGHT - smokedope2016</li>
+          <li data-src="criptape/eastbay---smokedope2016.mp3">Eastbay - smokedope2016</li>
+          <li data-src="criptape/elite-socks---smokedope2016.mp3">Elite Socks - smokedope2016</li>
+          <li data-src="criptape/glock---smokedope2016.mp3">Glock - smokedope2016</li>
+          <li data-src="criptape/kyoto---laker.mp3">Kyoto - Laker</li>
+          <li data-src="criptape/no-water---smokedope2016.mp3">No Water - smokedope2016</li>
+          <li data-src="criptape/on-my-roof---smokedope2016.mp3">On My Roof - smokedope2016</li>
+          <li data-src="criptape/slow-down---smokedope2016.mp3">SLOW DOWN - smokedope2016</li>
+          <li data-src="/criptape/snake---smokedope2016.mp3">SNAKE - smokedope2016, Laker</li>
+          <li data-src="criptape/taipei-waterbed---smokedope2016.mp3">Taipei Waterbed - smokedope2016</li>
+          <li data-src="criptape/triple---smokedope2016.mp3">TRIPLE - smokedope2016</li>
+        </ul>
+      </div>
+    </div>
+
+    <script>
+      const input = document.getElementById('command-input');
+      const inputRow = document.getElementById('input-row');
+      const output = document.getElementById('output');
+      const promptText = document.getElementById('prompt-text');
+      const musicWindow = document.getElementById('musicWindow');
+
+      let currentDir = '~';
+
+      // Playback State Engine Config Variables
+      let isLoopSingle = false;
+      let isRepeatAll = false;
+      let isShuffle = false;
+
+      const bootLines = [
+          "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡀⠀⠀⠀⠀",
+          "⠀⠀⠀⠀⢀⡴⣆⠀⠀⠀⠀⠀⣠⡀⠀⠀⠀⠀⠀⠀⣼⣿⡗⠀⠀⠀⠀",
+          "⠀⠀⠀⣠⠟⠀⠘⠷⠶⠶⠶⠾⠉⢳⡄⠀⠀⠀⠀⠀⣧⣿⠀⠀⠀⠀⠀",
+          "⠀⠀⣰⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣤⣤⣤⣤⣤⣿⢿⣄⠀⠀⠀⠀",
+          "⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣧⠀⠀⠀⠀⠀⠀⠙⣷⡴⠶⣦",
+          "⠀⠀⢱⡀⠀⠉⠉⠀⠀⠀⠀⠛⠃⠀⢠⡟⠀⠀⠀⢀⣀⣠⣤⠿⠞⠛⠋",
+          "⣠⠾⠋⠙⣶⣤⣤⣤⣤⣤⣀⣠⣤⣾⣿⠴⠶⠚⠋⠉⠁⠀⠀⠀⠀⠀⠀",
+          "⠛⠒⠛⠉⠉⠀⠀⠀⣴⠟⢃⡴⠛⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+          "⠀⠀⠀⠀⠀⠀⠀⠀⠛⠛⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+          "",
+          "welcome to poppi's portfolio",
+          "terminal initialized. type 'help' for a list of available commands.\n"
+      ];
+
+      const fileSystem = {
+          '~': { type: 'dir', contents: 'games/   socials/   contact/' },
+          'games': {
+              type: 'dir',
+              contents: 'jstris_offline.exe   block_blast.exe   tetris.exe   gba_emulator.exe',
+              files: { 'jstris_offline.exe': 'https://github.io', 'block_blast.exe': 'https://github.io', 'tetris.exe': 'https://github.io', 'gba_emulator.exe': 'https://github.io' }
+          },
+          'socials': {
+              type: 'dir',
+              contents: 'instagram.lnk   tiktok.lnk   steam.lnk   github.lnk',
+              files: { 'instagram.lnk': 'https://instagram.com', 'tiktok.lnk': 'https://tiktok.com', 'steam.lnk': 'https://steamcommunity.com', 'github.lnk': 'https://github.com' }
+          },
+          'contact': {
+              type: 'dir',
+              contents: 'email.txt',
+              files: { 'email.txt': 'mailto:cia@lobbyist.com' }
+          }
+      };
+      async function initializeTerminal() {
+          inputRow.classList.add('hidden');
+          output.innerHTML = '';
+          currentDir = '~';
+          promptText.innerText = `user@poppis-portfolio:${currentDir}$`;
+          for (let i = 0; i < bootLines.length; i++) {
+              output.innerHTML += bootLines[i] + '\n';
+              window.scrollTo(0, document.body.scrollHeight);
+              await new Promise(resolve => setTimeout(resolve, 50));
+          }
+          inputRow.classList.remove('hidden');
+          input.focus();
+      }
+
+      function openMusicWindow() {
+          musicWindow.classList.remove('hidden');
+      }
+      
+      function closeMusicWindow() {
+          musicWindow.classList.add('hidden');
+          document.getElementById('audio').pause();
+      }
+
+      // Mode Handler Toggles
+      function toggleMode(mode) {
+          if (mode === 'loop') {
+              isLoopSingle = !isLoopSingle;
+              document.getElementById('btn-loop').classList.toggle('active', isLoopSingle);
+              if (isLoopSingle && isRepeatAll) {
+                  isRepeatAll = false;
+                  document.getElementById('btn-repeat').classList.remove('active');
+              }
+          } else if (mode === 'repeat') {
+              isRepeatAll = !isRepeatAll;
+              document.getElementById('btn-repeat').classList.toggle('active', isRepeatAll);
+              if (isRepeatAll && isLoopSingle) {
+                  isLoopSingle = false;
+                  document.getElementById('btn-loop').classList.remove('active');
+              }
+          } else if (mode === 'shuffle') {
+              isShuffle = !isShuffle;
+              document.getElementById('btn-shuffle').classList.toggle('active', isShuffle);
+          }
+      }
+
+      // Safe Window Drag Script Mechanics
+      let isDragging = false;
+      let offsetX, offsetY;
+      const header = document.getElementById('windowHeader');
+
+      header.addEventListener('mousedown', (e) => {
+          if(e.target.closest('.window-buttons')) return;
+          isDragging = true;
+          offsetX = e.clientX - musicWindow.offsetLeft;
+          offsetY = e.clientY - musicWindow.offsetTop;
+      });
+
+      document.addEventListener('mousemove', (e) => {
+          if (isDragging) {
+              musicWindow.style.left = (e.clientX - offsetX) + 'px';
+              musicWindow.style.top = (e.clientY - offsetY) + 'px';
+          }
+      });
+
+      document.addEventListener('mouseup', () => { isDragging = false; });
+
+      // Core Audio Mechanics Logic
+      const audio = document.getElementById('audio');
+      const source = document.getElementById('audio-source');
+      const playlist = document.getElementById('playlist');
+      const tracks = playlist.getElementsByTagName('li');
+
+      function loadTrack(src, element) {
+          for (let track of tracks) { track.classList.remove('active'); }
+          element.classList.add('active');
+          source.src = src;
+          audio.load();
+          audio.oncanplay = () => { audio.play().catch(err => console.warn(err)); };
+      }
+
+      for (let track of tracks) {
+          track.addEventListener('click', function () {
+              loadTrack(this.getAttribute('data-src'), this);
+          });
+      }
+
+      audio.addEventListener('ended', () => {
+          const trackArray = Array.from(tracks);
+          let currentIndex = trackArray.findIndex(t => t.classList.contains('active'));
+
+          if (isLoopSingle && currentIndex !== -1) {
+              loadTrack(tracks[currentIndex].getAttribute('data-src'), tracks[currentIndex]);
+              return;
+          }
+
+          if (isShuffle) {
+              let randomIndex = Math.floor(Math.random() * tracks.length);
+              if (tracks.length > 1 && randomIndex === currentIndex) {
+                  randomIndex = (randomIndex + 1) % tracks.length;
+              }
+              loadTrack(tracks[randomIndex].getAttribute('data-src'), tracks[randomIndex]);
+              return;
+          }
+
+          let nextIndex = currentIndex + 1;
+          if (nextIndex < tracks.length) {
+              loadTrack(tracks[nextIndex].getAttribute('data-src'), tracks[nextIndex]);
+          } else if (isRepeatAll) {
+              loadTrack(tracks[0].getAttribute('data-src'), tracks[0]);
+          }
+      });
+
+      // Command Execution Processing Engine
+      document.addEventListener('click', () => {
+          if (!inputRow.classList.contains('hidden') && !isDragging) input.focus();
+      });
+
+      input.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+              const rawInput = this.value.trim();
+              if (!rawInput) {
+                  output.innerHTML += `user@poppis-portfolio:${currentDir}$ \n`;
+                  return;
+              }
+              const cleanedInput = rawInput.replace(/\s+/g, ' ');
+              const spaceIndex = cleanedInput.indexOf(' ');
+              const cmd = spaceIndex === -1 ? cleanedInput.toLowerCase() : cleanedInput.substring(0, spaceIndex).toLowerCase();
+              const targetArg = spaceIndex === -1 ? '' : cleanedInput.substring(spaceIndex + 1);
+              
+              this.value = '';
+              output.innerHTML += `user@poppis-portfolio:${currentDir}$ ${rawInput}\n`;
+
+              if (cmd === 'clear') { output.innerHTML = ''; return; }
+              if (cmd === 'reinit') { initializeTerminal(); return; }
+              if (cmd === 'music') {
+                  output.innerHTML += "Opening interactive modular audio workspace client...\n\n";
+                  openMusicWindow();
+                  window.scrollTo(0, document.body.scrollHeight);
+                  return;
+              }
+              if (cmd === 'help') {
+                  output.innerHTML += 'Available commands:\n' +
+                                      '  ls [folder]     - list contents\n' +
+                                      '  cd [folder]     - change directory\n' +
+                                      '  open [filename] - run/open target file\n' +
+                                      '  music           - boot audio player widget\n' +
+                                      '  clear           - clear terminal\n' +
+                                      '  reinit          - reinitialize terminal\n\n';
+                  window.scrollTo(0, document.body.scrollHeight);
+                  return;
+              }
+              if (cmd === 'ls') {
+                  if (targetArg) {
+                      const tl = targetArg.toLowerCase();
+                      if (currentDir === '~' && fileSystem[tl]) { output.innerHTML += `contents of ${tl}/:\n  ${fileSystem[tl].contents}\n\n`; }
+                      else { output.innerHTML += `ls: cannot access '${targetArg}': no such file or directory\n\n`; }
+                  } else { output.innerHTML += `${fileSystem[currentDir].contents}\n\n`; }
+                  window.scrollTo(0, document.body.scrollHeight);
+                  return;
+              }
+              if (cmd === 'cd') {
+                  if (!targetArg || targetArg === '~' || targetArg === '..') { currentDir = '~'; }
+                  else {
+                      const tl = targetArg.toLowerCase();
+                      if (currentDir === '~' && fileSystem[tl]) { currentDir = tl; }
+                      else { output.innerHTML += `-bash: cd: ${targetArg}: No such file or directory\n`; }
+                  }
+                  promptText.innerText = `user@poppis-portfolio:${currentDir}$`;
+                  output.innerHTML += '\n';
+                  window.scrollTo(0, document.body.scrollHeight);
+                  return;
+              }
+              if (cmd === 'open') {
+                  if (!targetArg) { output.innerHTML += "usage: open [filename]\n\n"; }
+                  else {
+                      const activeFolder = fileSystem[currentDir];
+                      if (activeFolder.files && activeFolder.files[targetArg]) {
+                          output.innerHTML += `opening ${targetArg}...\n\n`;
+                          window.open(activeFolder.files[targetArg], '_blank');
+                      } else { output.innerHTML += `open: '${targetArg}': no such file found.\n\n`; }
+                  }
+                  window.scrollTo(0, document.body.scrollHeight);
+                  return;
+              }
+              output.innerHTML += `-bash: ${cmd}: command not found\n\n`;
+              window.scrollTo(0, document.body.scrollHeight);
+          }
+      });
+
+      initializeTerminal();
+    </script>
+  </body>
 </html>
